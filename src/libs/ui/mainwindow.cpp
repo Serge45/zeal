@@ -52,8 +52,8 @@
 #include <QSystemTrayIcon>
 #include <QTabBar>
 #include <QTimer>
-#include <QWebHistory>
-#include <QWebSettings>
+#include <QWebEngineHistory>
+#include <QWebEngineSettings>
 
 using namespace Zeal;
 using namespace Zeal::WidgetUi;
@@ -273,11 +273,11 @@ MainWindow::MainWindow(Core::Application *app, QWidget *parent) :
     m_backMenu = new QMenu(ui->backButton);
     connect(m_backMenu, &QMenu::aboutToShow, this, [this]() {
         m_backMenu->clear();
-        QWebHistory *history = currentTab()->history();
-        QList<QWebHistoryItem> items = history->backItems(10);
+        QWebEngineHistory *history = currentTab()->history();
+        QList<QWebEngineHistoryItem> items = history->backItems(10);
         for (auto it = items.crbegin(); it != items.crend(); ++it) {
             const QIcon icon = docsetIcon(docsetName(it->url()));
-            const QWebHistoryItem item = *it;
+            const QWebEngineHistoryItem item = *it;
             m_backMenu->addAction(icon, it->title(), [=](bool) { history->goToItem(item); });
         }
     });
@@ -287,8 +287,8 @@ MainWindow::MainWindow(Core::Application *app, QWidget *parent) :
     m_forwardMenu = new QMenu(ui->forwardButton);
     connect(m_forwardMenu, &QMenu::aboutToShow, this, [this]() {
         m_forwardMenu->clear();
-        QWebHistory *history = currentTab()->history();
-        for (const QWebHistoryItem &item: history->forwardItems(10)) {
+        QWebEngineHistory *history = currentTab()->history();
+        for (const QWebEngineHistoryItem &item: history->forwardItems(10)) {
             const QIcon icon = docsetIcon(docsetName(item.url()));
             m_forwardMenu->addAction(icon, item.title(), [=](bool) { history->goToItem(item); });
         }
@@ -900,10 +900,10 @@ void MainWindow::applySettings()
     }
 
     const QString cssUrl = QLatin1String("data:text/css;charset=utf-8;base64,") + ba.toBase64();
-    QWebSettings::globalSettings()->setUserStyleSheetUrl(QUrl(cssUrl));
+    //QWebEngineSettings::globalSettings()->setUserStyleSheetUrl(QUrl(cssUrl));
 
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::ScrollAnimatorEnabled,
-                                                 m_settings->isSmoothScrollingEnabled);
+    QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled,
+                                                       m_settings->isSmoothScrollingEnabled);
 }
 
 void MainWindow::toggleWindow()

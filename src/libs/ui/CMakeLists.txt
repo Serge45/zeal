@@ -31,5 +31,5 @@ add_library(Ui
 
 target_link_libraries(Ui QxtGlobalShortcut Registry)
 
-find_package(Qt5 COMPONENTS WebKitWidgets REQUIRED)
-target_link_libraries(Ui Qt5::WebKitWidgets)
+find_package(Qt5 COMPONENTS webenginewidgets REQUIRED)
+target_link_libraries(Ui Qt5::WebEngineWidgets)

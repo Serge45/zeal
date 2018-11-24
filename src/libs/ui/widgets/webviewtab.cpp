@@ -29,9 +29,10 @@
 #include <QCoreApplication>
 #include <QKeyEvent>
 #include <QStyle>
-#include <QWebFrame>
-#include <QWebHistory>
-#include <QWebPage>
+#include <QWebEnginePage>
+#include <QWebEngineHistory>
+#include <QWebEnginePage>
+#include <QWebEngineSettings>
 #include <QVBoxLayout>
 
 using namespace Zeal::WidgetUi;
@@ -44,15 +45,15 @@ WebViewTab::WebViewTab(QWidget *parent)
     layout->setSpacing(0);
 
     m_webView = new WebView();
-    connect(m_webView->page(), &QWebPage::linkHovered, [this](const QString &link) {
+    connect(m_webView->page(), &QWebEnginePage::linkHovered, [this](const QString &link) {
         if (link.startsWith(QLatin1String("file:")) || link.startsWith(QLatin1String("qrc:")))
             return;
 
         setToolTip(link);
     });
 
-    connect(m_webView, &QWebView::titleChanged, this, &WebViewTab::titleChanged);
-    connect(m_webView, &QWebView::urlChanged, this, &WebViewTab::urlChanged);
+    connect(m_webView, &QWebEngineView::titleChanged, this, &WebViewTab::titleChanged);
+    connect(m_webView, &QWebEngineView::urlChanged, this, &WebViewTab::urlChanged);
 
     layout->addWidget(m_webView);
 
@@ -62,12 +63,12 @@ WebViewTab::WebViewTab(QWidget *parent)
 
 int WebViewTab::zoomLevel() const
 {
-    return m_webView->zoomLevel();
+    return m_webView->page()->zoomFactor();
 }
 
 void WebViewTab::setZoomLevel(int level)
 {
-    m_webView->setZoomLevel(level);
+    m_webView->page()->setZoomFactor(level / 100.);
 }
 
 void WebViewTab::zoomIn()
@@ -82,20 +83,22 @@ void WebViewTab::zoomOut()
 
 void WebViewTab::resetZoom()
 {
-    m_webView->resetZoom();
+    m_webView->page()->setZoomFactor(1.);
 }
 
 void WebViewTab::setJavaScriptEnabled(bool enabled)
 {
-    m_webView->page()->settings()->setAttribute(QWebSettings::JavascriptEnabled, enabled);
+    m_webView->page()->settings()->setAttribute(QWebEngineSettings::JavascriptEnabled, enabled);
 }
 
 void WebViewTab::setWebBridgeObject(const QString &name, QObject *object)
 {
-    connect(m_webView->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
+    /*
+    connect(m_webView->page(), &QWebEnginePage::javaScriptWindowObjectCleared,
             this, [=]() {
-        m_webView->page()->mainFrame()->addToJavaScriptWindowObject(name, object);
+        m_webView->page()->addToJavaScriptWindowObject(name, object);
     });
+    */
 }
 
 void WebViewTab::load(const QUrl &url)
@@ -155,7 +158,7 @@ QUrl WebViewTab::url() const
     return m_webView->url();
 }
 
-QWebHistory *WebViewTab::history() const
+QWebEngineHistory *WebViewTab::history() const
 {
     return m_webView->history();
 }

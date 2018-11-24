@@ -27,7 +27,7 @@
 
 class QLineEdit;
 class QToolButton;
-class QWebView;
+class QWebEngineView;
 
 namespace Zeal {
 namespace WidgetUi {
@@ -36,7 +36,7 @@ class SearchToolBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SearchToolBar(QWebView *webView, QWidget *parent = nullptr);
+    explicit SearchToolBar(QWebEngineView *webView, QWidget *parent = nullptr);
 
     void setText(const QString &text);
     void activate();
@@ -62,7 +62,7 @@ private:
     QToolButton *m_highlightAllButton = nullptr;
     QToolButton *m_matchCaseButton = nullptr;
 
-    QWebView *m_webView = nullptr;
+    QWebEngineView *m_webView = nullptr;
 };
 
 } // namespace WidgetUi

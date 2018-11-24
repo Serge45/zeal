@@ -26,13 +26,13 @@
 
 #include <QWidget>
 
-class QWebHistory;
+class QWebEngineHistory;
 
 namespace Zeal {
 namespace WidgetUi {
+class WebView;
 
 class SearchToolBar;
-class WebView;
 
 class WebViewTab : public QWidget
 {
@@ -48,7 +48,7 @@ public:
     QString title() const;
     QUrl url() const;
 
-    QWebHistory *history() const;
+    QWebEngineHistory *history() const;
 
     int zoomLevel() const;
     void setZoomLevel(int level);
